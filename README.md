@@ -1,5 +1,20 @@
 # Computer Graphics Assignment
 
+### Install instructions
+
+A recent version of [NodeJS](https://nodejs.org/en/) is required.
+
+Run the following commands after cloning the repository:
+
+```bash
+# add this package globally
+$ npm install -g parcel-bundler
+
+# run this inside project root 
+$ npm install # install dependencies
+$ parcel index.html # build and browse to http://localhost:1234 for developing
+```
+
 ### Task
 Create a scene, similar to a short movie scene, of your neighborhood (close to where you live)
 with real-world objects: street, building, trees, cars, etc..
