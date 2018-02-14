@@ -12,6 +12,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 document.body.appendChild(renderer.domElement);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 camera.position.set(1, 1, 10);
 camera.lookAt(new THREE.Vector3());
 
@@ -30,14 +32,15 @@ animate(controls, renderer, scene, camera);
 
 function drawSun(scene) {
 	const light = new THREE.PointLight(0xffffff, 1, 100);
-	light.position.set(10, 10, 10);
+	light.castShadow = true;
+	light.position.set(15, 30, 20);
 	scene.add(light);
 }
 
 drawSun(scene);
 
 function drawHemisphereLight(scene) {
-	const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.8);
+	const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8);
 	scene.add(light);
 }
 
@@ -46,8 +49,9 @@ drawHemisphereLight(scene);
 function drawGround(scene) {
 	const geometry = new THREE.PlaneGeometry(100, 100);
 	geometry.lookAt(new THREE.Vector3(0, 10, 0));
-	const material = new THREE.MeshBasicMaterial({color: 0xeeeeee});
+	const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
 	const plane = new THREE.Mesh(geometry, material);
+	plane.receiveShadow = true;
 	scene.add(plane);
 }
 
@@ -61,7 +65,9 @@ function drawAppartments(scene) {
 		const material = new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load(brick)
 		});
-		return new THREE.Mesh(geometry, material);
+		const mesh = new THREE.Mesh(geometry, material);
+		mesh.castShadow = true;
+		return mesh;
 	}
 
 	const left = box(2, 2, 2);
