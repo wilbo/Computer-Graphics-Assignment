@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
+import brick from './assets/brick.jpg';
 
 // Setup
 //
@@ -11,7 +12,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 document.body.appendChild(renderer.domElement);
 renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.set(1, 1, -10);
+camera.position.set(1, 1, 10);
 camera.lookAt(new THREE.Vector3());
 
 // Render
@@ -24,36 +25,60 @@ function animate(c, r, s, ca) {
 
 animate(controls, renderer, scene, camera);
 
-// Shapes
+// Shapes en Stuff
 //
 
-function box(x, y, z) {
-	const geo = new THREE.BoxGeometry(x, y, z);
-	const mat = new THREE.MeshNormalMaterial();
-	return new THREE.Mesh(geo, mat);
+function drawSun(scene) {
+	const light = new THREE.PointLight(0xffffff, 1, 100);
+	light.position.set(10, 10, 10);
+	scene.add(light);
 }
 
-const left = box(2, 2, 1);
-left.position.x = -1.5;
-const middle = box(1, 1, 1);
-middle.position.y = 0.5;
-const right = box(2, 2, 1);
-right.position.x = 1.5;
-const hang = box(1.5, 1, 1);
-hang.position.z = 0.5;
-hang.position.x = 1.75;
-hang.position.y = 0.5;
+drawSun(scene);
 
-scene.add(left);
-scene.add(middle);
-scene.add(right);
-scene.add(hang);
+function drawHemisphereLight(scene) {
+	const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.8);
+	scene.add(light);
+}
 
-var material = new THREE.MeshNormalMaterial({ color: 0x0000ff });
-var geometry = new THREE.Geometry();
-geometry.vertices.push(new THREE.Vector3(-10, 0, 0));
-geometry.vertices.push(new THREE.Vector3(0, 10, 0));
-geometry.vertices.push(new THREE.Vector3(10, 0, 0));
-geometry.vertices.push(new THREE.Vector3(-10, 0, 0));
-var line = new THREE.Mesh(geometry, material);
-scene.add(line);
+drawHemisphereLight(scene);
+
+function drawGround(scene) {
+	const geometry = new THREE.PlaneGeometry(100, 100);
+	geometry.lookAt(new THREE.Vector3(0, 10, 0));
+	const material = new THREE.MeshBasicMaterial({color: 0xeeeeee});
+	const plane = new THREE.Mesh(geometry, material);
+	scene.add(plane);
+}
+
+drawGround(scene);
+
+function drawAppartments(scene) {
+	function box(x, y, z) {
+		const geometry = new THREE.BoxGeometry(x, y, z);
+		// set its 0 point in a corner
+		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(x / 2, y / 2, -(z / 2)));
+		const material = new THREE.MeshLambertMaterial({
+			map: new THREE.TextureLoader().load(brick)
+		});
+		return new THREE.Mesh(geometry, material);
+	}
+
+	const left = box(2, 2, 2);
+	left.position.x = -2;
+	const middle = box(1, 1, 2);
+	middle.position.y = 1;
+	const right = box(2, 2, 2);
+	right.position.x = 1;
+	const hang = box(1.5, 1, 1);
+	hang.position.z = 0.5;
+	hang.position.x = 1.5;
+	hang.position.y = 1;
+
+	scene.add(left);
+	scene.add(middle);
+	scene.add(right);
+	scene.add(hang);
+}
+
+drawAppartments(scene);

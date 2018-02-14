@@ -4,7 +4,8 @@ module.exports = {
 			"indent": ["error", "tab"],
 			"semi": [2, "always"],
 			"space-before-function-paren": ["error", "never"],
-			"no-tabs": 0
+			"no-tabs": 0,
+			"no-unused-vars": ["warn"]
 		},
 		"globals": {
 			"window": true
