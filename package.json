@@ -1,16 +1,23 @@
 {
-	"name": "hl1",
-  "version": "1.0.0",
-  "description": "a three js scene",
-  "main": "index.js",
-  "devDependencies": {},
-  "scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Wilbert Schepenaar",
-  "license": "ISC",
-	"dependencies": {
-		"three": "^0.89.0",
-		"three-orbitcontrols": "^2.0.0"
-	}
+ "name": "hl1",
+ "version": "1.0.0",
+ "description": "a three js scene",
+ "main": "index.js",
+ "devDependencies": {
+  "eslint-config-standard": "^11.0.0-beta.0",
+  "eslint-plugin-import": "^2.8.0",
+  "eslint-plugin-node": "^6.0.0",
+  "eslint-plugin-promise": "^3.6.0",
+  "eslint-plugin-standard": "^3.0.1"
+ },
+ "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1"
+ },
+ "author": "Wilbert Schepenaar",
+ "license": "ISC",
+ "dependencies": {
+  "eslint": "^4.17.0",
+  "three": "^0.89.0",
+  "three-orbitcontrols": "^2.0.0"
+ }
 }
