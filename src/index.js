@@ -112,3 +112,38 @@ function drawWindow1(scene, x, y, z) {
 	plane.position.set(x + 0.2, y + 0.3, z);
 	scene.add(plane);
 }
+
+function drawTree(scene, width, height, depth, x, y, z) {
+	const radiusTop = width / 16;
+	const radiusBottom = width / 14;
+	var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, 32 );
+	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material = new THREE.MeshLambertMaterial({ color: 0x916f3e });
+	var treePole = new THREE.Mesh( geometry, material );
+	treePole.position.set(x, y, z);
+
+	var geometry2 = new THREE.SphereGeometry( 0.5, 32, 32 );
+	geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material2 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
+	var leafs = new THREE.Mesh( geometry2, material2 );
+	leafs.position.set(x, Math.random() * 0.5 + 0.5 + y, z);
+
+	treePole.castShadow = true;
+	leafs.castShadow = true;
+
+	scene.add(treePole);
+	scene.add(leafs);
+}
+
+function drawTrees(scene) {
+	drawTree(scene, 1, 1, 1, 10, 0, 10);
+	drawTree(scene, 1, 1, 1, -10, 0, 10);
+	drawTree(scene, 1, 1, 1, 10, 0, -10);
+	drawTree(scene, 1, 1, 1, 5, 0, 3);
+	drawTree(scene, 1, 1, 1, 7, 0, 9);
+	drawTree(scene, 1, 1, 1, 3, 0, 8);
+	drawTree(scene, 1, 1, 1, -7, 0, -9);
+	drawTree(scene, 1, 1, 1, -3, 0, -8);
+}
+
+drawTrees(scene);
