@@ -11,8 +11,8 @@
   "eslint-plugin-standard": "^3.0.1"
  },
  "scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1",
-	"start": "parcel src/index.html"
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "parcel src/index.html"
  },
  "author": "Wilbert Schepenaar",
  "license": "ISC",
