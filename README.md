@@ -12,7 +12,7 @@ $ npm install -g parcel-bundler
 
 # run this inside project root 
 $ npm install # install dependencies
-$ parcel src/index.html # build and browse to http://localhost:1234 for developing
+$ npm start # dev build and browse to http://localhost:1234
 ```
 
 ### Task
