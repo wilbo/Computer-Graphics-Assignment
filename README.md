@@ -32,6 +32,3 @@ http://www.humus.name/index.php?page=Textures)
 make car(s) move
 - Include OrbitControls.js
 - Movement of camera with keyboard controls
-
-
-

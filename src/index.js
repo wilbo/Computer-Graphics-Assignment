@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
-var helper = require('./helper.js');
 import window1 from './assets/window.jpg';
-
+import road from './assets/road.jpg';
+var helper = require('./helper.js');
 
 // Setup
 //
@@ -19,16 +19,6 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 camera.position.set(1, 1, 10);
 camera.lookAt(new THREE.Vector3());
-
-// Render
-
-function animate(c, r, s, ca) {
-	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
-	c.update();
-	r.render(s, ca);
-}
-
-animate(controls, renderer, scene, camera);
 
 // Shapes en Stuff
 //
@@ -138,10 +128,90 @@ drawNewBuilding(1, 4, 1, 5, 0, 0);
 function drawWindow1(scene, x, y, z) {
 	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
 	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.3, 0.2, 1));
-	// geometry.lookAt(new THREE.Vector3(0, 10, 0));
 	const texture = new THREE.TextureLoader().load(window1);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
 	const plane = new THREE.Mesh(geometry, material);
 	plane.position.set(x + 0.2, y + 0.3, z);
 	scene.add(plane);
 }
+
+function drawTree(scene, width, height, depth, x, y, z) {
+	const radiusTop = width / 16;
+	const radiusBottom = width / 14;
+	var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, 32 );
+	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material = new THREE.MeshLambertMaterial({ color: 0x916f3e });
+	var treePole = new THREE.Mesh( geometry, material );
+	treePole.position.set(x, y, z);
+
+	var geometry2 = new THREE.SphereGeometry( 0.5, 32, 32 );
+	geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material2 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
+	var leafs = new THREE.Mesh( geometry2, material2 );
+	leafs.position.set(x, Math.random() * 0.5 + 0.5 + y, z);
+
+	treePole.castShadow = true;
+	leafs.castShadow = true;
+
+	scene.add(treePole);
+	scene.add(leafs);
+}
+
+function drawTrees(scene) {
+	for (let i = -10; i < 10; i++) {
+		drawTree(scene, 1, 1, 1, i * 2, 0, 6);
+	}
+}
+
+drawTrees(scene);
+
+function drawRoad(scene) {
+	const geometry = new THREE.PlaneGeometry( 100, 4, 32 );
+	geometry.lookAt(new THREE.Vector3(0, 10, 0));
+	const texture = new THREE.TextureLoader().load(road);
+	texture.wrapS = THREE.RepeatWrapping;
+	texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set(1, 12);
+	texture.rotation = helper.degreeToRadian(90);
+	const material = new THREE.MeshLambertMaterial({ map: texture });
+	const plane = new THREE.Mesh( geometry, material );
+	plane.position.set(0, 0.01, 4);
+	plane.receiveShadow = true;
+	scene.add( plane );
+}
+
+drawRoad(scene);
+
+function drawBeetle(scene) {
+	const objectLoader = new THREE.ObjectLoader();
+	objectLoader.load('dist/beetle.json', (obj) => {
+		beetle = obj;
+		beetle.scale.set(0.001, 0.001, 0.001);
+		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
+		scene.add(beetle);
+	});
+}
+
+drawBeetle(scene);
+
+let beetle = null;
+let beetlePos = 100;
+function driveBeetle(speed) {
+	if (beetle !== null) {
+		beetle.position.set(beetlePos - 50, 0.3, 3);
+		beetlePos = beetlePos === 0 ? 100 : beetlePos - speed;
+	}
+}
+
+// Render
+
+function animate(c, r, s, ca) {
+	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
+
+	driveBeetle(0.25);
+
+	c.update();
+	r.render(s, ca);
+}
+
+animate(controls, renderer, scene, camera);
