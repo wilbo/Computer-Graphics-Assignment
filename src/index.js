@@ -20,16 +20,6 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 camera.position.set(1, 1, 10);
 camera.lookAt(new THREE.Vector3());
 
-// Render
-
-function animate(c, r, s, ca) {
-	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
-	c.update();
-	r.render(s, ca);
-}
-
-animate(controls, renderer, scene, camera);
-
 // Shapes en Stuff
 //
 
@@ -185,3 +175,37 @@ function drawRoad(scene) {
 }
 
 drawRoad(scene);
+
+function drawBeetle(scene) {
+	const objectLoader = new THREE.ObjectLoader();
+	objectLoader.load('dist/beetle.json', (obj) => {
+		beetle = obj;
+		beetle.scale.set(0.001, 0.001, 0.001);
+		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
+		scene.add(beetle);
+	});
+}
+
+drawBeetle(scene);
+
+let beetle = null;
+let beetlePos = 100;
+function driveBeetle(speed) {
+	if (beetle !== null) {
+		beetle.position.set(beetlePos - 50, 0.3, 3);
+		beetlePos = beetlePos === 0 ? 100 : beetlePos - speed;
+	}
+}
+
+// Render
+
+function animate(c, r, s, ca) {
+	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
+
+	driveBeetle(0.25);
+
+	c.update();
+	r.render(s, ca);
+}
+
+animate(controls, renderer, scene, camera);
