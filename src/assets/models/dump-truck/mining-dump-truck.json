@@ -47,43 +47,6 @@
             "receiveShadow": true,
             "geometry": "1AB6A577-F286-3C2C-8B5B-EA0596770E7A"
         },{
-            "name": "LightPreset",
-            "uuid": "1783D250-7BC6-30D0-B7CB-5461D8774CE2",
-            "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,-0.136799,105.367,12.2061,1],
-            "visible": true,
-            "type": "Object",
-            "children": [{
-                "name": "BackLight",
-                "uuid": "6C2D9241-E0B7-3878-BBEB-78107E823E3E",
-                "matrix": [-0.117758,-0.595422,0.794736,0,0.794736,0.42335,0.434935,0,-0.595422,0.682823,0.42335,0,-2498.8,2865.59,1776.67,1],
-                "visible": true,
-                "type": "DirectionalLight",
-                "castShadow": false,
-                "color": 7838134,
-                "intensity": 0.75,
-                "distance": 0
-            },{
-                "name": "FillLight",
-                "uuid": "45C90A33-0D2F-3540-A48E-3AFDDA8A011B",
-                "matrix": [0.398127,0.775804,-0.489512,0,-0.489512,0.630973,0.601873,0,0.775804,-0,0.630973,0,6255.59,0,5087.76,1],
-                "visible": true,
-                "type": "DirectionalLight",
-                "castShadow": false,
-                "color": 15062196,
-                "intensity": 0.85,
-                "distance": 0
-            },{
-                "name": "KeyLight",
-                "uuid": "50157FD0-6064-3AF8-A62F-23E1675946D0",
-                "matrix": [0.817645,-0.527833,0.229888,0,0.229888,0.66542,0.710188,0,-0.527833,-0.527833,0.66542,0,-2215.15,-2215.15,2792.56,1],
-                "visible": true,
-                "type": "DirectionalLight",
-                "castShadow": false,
-                "color": 16776180,
-                "intensity": 1,
-                "distance": 0
-            }]
-        },{
             "name": "Part05",
             "uuid": "0324D0C1-098B-38DA-8378-11D67138C342",
             "matrix": [-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
