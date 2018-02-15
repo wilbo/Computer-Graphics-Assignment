@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
+var helper = require('./helper.js');
 import window1 from './assets/window.jpg';
+
 
 // Setup
 //
@@ -101,6 +103,33 @@ function drawAppartments(scene) {
 }
 
 drawAppartments(scene);
+
+
+
+function drawNewBuilding(width,height,depth,x,z,y){
+		//create a cube as per usual
+		const geometry = new THREE.CubeGeometry(width, height, depth);
+		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
+		var cubeMesh = new THREE.Mesh(
+				geometry,
+				new THREE.MeshLambertMaterial()
+		);
+		scene.add(cubeMesh);
+
+		//change vertex positions
+		cubeMesh.geometry.vertices[1].y += 1;
+		cubeMesh.geometry.vertices[4].y += 1;
+		cubeMesh.position.set(x,z,y);
+		//cubeMesh.rotateY(90 * (3.14/180));
+		cubeMesh.rotateY(helper.degreeToRadian(90));
+		//indicate that the vertices need update
+		cubeMesh.geometry.verticesNeedUpdate = true;
+		//return cubeMesh;
+	//}
+	//scene.add(building(1,2,3));
+}
+
+drawNewBuilding(1, 4, 1, 5, 0, 0);
 
 function drawWindow1(scene, x, y, z) {
 	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
