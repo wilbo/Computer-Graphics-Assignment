@@ -3,6 +3,12 @@ import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
 import window1 from './assets/window.jpg';
 import road from './assets/road.jpg';
+import skybox1 from './assets/skybox/devils_advocate_lf.jpg';
+import skybox2 from './assets/skybox/devils_advocate_rt.jpg';
+import skybox3 from './assets/skybox/devils_advocate_up.jpg';
+import skybox4 from './assets/skybox/devils_advocate_dn.jpg';
+import skybox5 from './assets/skybox/devils_advocate_ft.jpg';
+import skybox6 from './assets/skybox/devils_advocate_bk.jpg';
 var helper = require('./helper.js');
 
 // Setup
@@ -40,7 +46,7 @@ function drawHemisphereLight(scene) {
 drawHemisphereLight(scene);
 
 function drawGround(scene) {
-	const geometry = new THREE.PlaneGeometry(100, 100);
+	const geometry = new THREE.PlaneGeometry(1000, 1000);
 	geometry.lookAt(new THREE.Vector3(0, 10, 0));
 	const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
 	const plane = new THREE.Mesh(geometry, material);
@@ -207,7 +213,6 @@ function driveDumpTruck(speed) {
 	if (dumpTruck !== null) {
 		dumpTruck.position.set(dumpTruckPos - 50, 0, 5);
 		dumpTruckPos = dumpTruckPos >= 100 ? 0 : dumpTruckPos + speed;
-		// console.log(dumpTruckPos);
 	}
 }
 
@@ -223,6 +228,25 @@ function drawDumpTruck(scene) {
 }
 
 drawDumpTruck(scene);
+
+function drawSkyBox(scene) {
+	var directions = [skybox1, skybox2, skybox3, skybox4, skybox5, skybox6];
+	var materialArray = [];
+	for (var i = 0; i < 6; i++) {
+		materialArray.push(new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture(directions[i]),
+			side: THREE.BackSide
+		}));
+	}
+
+	var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+	var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+	var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+	skyBox.position.set(0, 100, 0);
+	scene.add(skyBox);
+}
+
+drawSkyBox(scene);
 
 // Render
 
