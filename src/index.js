@@ -3,6 +3,7 @@ import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
 import window1 from './assets/window.jpg';
 import road from './assets/road.jpg';
+import glass from './assets/glass.jpg';
 var helper = require('./helper.js');
 
 // Setup
@@ -100,7 +101,7 @@ function drawNewBuilding(width,height,depth,x,z,y){
 		//create a cube as per usual
 		const geometry = new THREE.CubeGeometry(width, height, depth);
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
-		const texture = new THREE.TextureLoader().load(brick);
+		const texture = new THREE.TextureLoader().load(glass);
 		const material = new THREE.MeshLambertMaterial({ map: texture });
 
 
@@ -109,6 +110,8 @@ function drawNewBuilding(width,height,depth,x,z,y){
 				new THREE.MeshLambertMaterial(material)
 		);
 		scene.add(cubeMesh);
+		cubeMesh.castShadow = true;
+
 
 		//change vertex positions
 		cubeMesh.geometry.vertices[1].y += 1;
@@ -123,7 +126,7 @@ function drawNewBuilding(width,height,depth,x,z,y){
 	//scene.add(building(1,2,3));
 }
 
-drawNewBuilding(1, 4, 1, 5, 0, 0);
+drawNewBuilding(3, 8, 2, 10, 0, 10);
 
 function drawWindow1(scene, x, y, z) {
 	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
@@ -192,6 +195,17 @@ function drawBeetle(scene) {
 	});
 }
 
+function drawPlane(scene){
+	const objectLoader = new THREE.ObjectLoader();
+	objectLoader.load('dist/fighter-plane.json', (obj) => {
+		var plane = obj;
+		plane.scale.set(1, 1, 1);
+		plane.rotation.set(0, helper.degreeToRadian(90), 0);
+		scene.add(plane);
+		plane.position.set(10, 10, 10)
+	});
+}
+drawPlane(scene);
 drawBeetle(scene);
 
 let beetle = null;
@@ -202,6 +216,8 @@ function driveBeetle(speed) {
 		beetlePos = beetlePos === 0 ? 100 : beetlePos - speed;
 	}
 }
+
+
 
 // Render
 
