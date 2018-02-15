@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
-var helper = require('./helper.js');
 import window1 from './assets/window.jpg';
+import road from './assets/road.jpg';
+var helper = require('./helper.js');
 
 // Setup
 //
@@ -131,7 +132,6 @@ drawNewBuilding(1, 4, 1, 5, 0, 0);
 function drawWindow1(scene, x, y, z) {
 	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
 	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.3, 0.2, 1));
-	// geometry.lookAt(new THREE.Vector3(0, 10, 0));
 	const texture = new THREE.TextureLoader().load(window1);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
 	const plane = new THREE.Mesh(geometry, material);
@@ -162,14 +162,26 @@ function drawTree(scene, width, height, depth, x, y, z) {
 }
 
 function drawTrees(scene) {
-	drawTree(scene, 1, 1, 1, 10, 0, 10);
-	drawTree(scene, 1, 1, 1, -10, 0, 10);
-	drawTree(scene, 1, 1, 1, 10, 0, -10);
-	drawTree(scene, 1, 1, 1, 5, 0, 3);
-	drawTree(scene, 1, 1, 1, 7, 0, 9);
-	drawTree(scene, 1, 1, 1, 3, 0, 8);
-	drawTree(scene, 1, 1, 1, -7, 0, -9);
-	drawTree(scene, 1, 1, 1, -3, 0, -8);
+	for (let i = -10; i < 10; i++) {
+		drawTree(scene, 1, 1, 1, i * 2, 0, 6);
+	}
 }
 
 drawTrees(scene);
+
+function drawRoad(scene) {
+	const geometry = new THREE.PlaneGeometry( 100, 4, 32 );
+	geometry.lookAt(new THREE.Vector3(0, 10, 0));
+	const texture = new THREE.TextureLoader().load(road);
+	texture.wrapS = THREE.RepeatWrapping;
+	texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set(1, 12);
+	texture.rotation = helper.degreeToRadian(90);
+	const material = new THREE.MeshLambertMaterial({ map: texture });
+	const plane = new THREE.Mesh( geometry, material );
+	plane.position.set(0, 0.01, 4);
+	plane.receiveShadow = true;
+	scene.add( plane );
+}
+
+drawRoad(scene);
