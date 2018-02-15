@@ -105,37 +105,27 @@ function drawNewBuilding(width, height, depth, x, z, y) {
 	// create a cube as per usual
 	const geometry = new THREE.CubeGeometry(width, height, depth);
 	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
-	const texture = new THREE.TextureLoader().load(brick);
+	const texture = new THREE.TextureLoader().load(glass);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
 
+	var cubeMesh = new THREE.Mesh(
+		geometry,
+		new THREE.MeshLambertMaterial(material)
+	);
+	scene.add(cubeMesh);
+	cubeMesh.castShadow = true;
 
-function drawNewBuilding(width,height,depth,x,z,y){
-		//create a cube as per usual
-		const geometry = new THREE.CubeGeometry(width, height, depth);
-		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
-		const texture = new THREE.TextureLoader().load(glass);
-		const material = new THREE.MeshLambertMaterial({ map: texture });
-
-
-		var cubeMesh = new THREE.Mesh(
-				geometry,
-				new THREE.MeshLambertMaterial(material)
-		);
-		scene.add(cubeMesh);
-		cubeMesh.castShadow = true;
-
-
-		//change vertex positions
-		cubeMesh.geometry.vertices[1].y += 1;
-		cubeMesh.geometry.vertices[4].y += 1;
-		cubeMesh.position.set(x,z,y);
-		//cubeMesh.rotateY(90 * (3.14/180));
-		cubeMesh.rotateY(helper.degreeToRadian(90));
-		//indicate that the vertices need update
-		cubeMesh.geometry.verticesNeedUpdate = true;
-		//return cubeMesh;
-	//}
-	//scene.add(building(1,2,3));
+	// change vertex positions
+	cubeMesh.geometry.vertices[1].y += 1;
+	cubeMesh.geometry.vertices[4].y += 1;
+	cubeMesh.position.set(x, z, y);
+	// cubeMesh.rotateY(90 * (3.14/180));
+	cubeMesh.rotateY(helper.degreeToRadian(90));
+	// indicate that the vertices need update
+	cubeMesh.geometry.verticesNeedUpdate = true;
+	// return cubeMesh;
+	// }
+	// scene.add(building(1,2,3));
 }
 
 drawNewBuilding(3, 8, 2, 10, 0, 10);
@@ -225,18 +215,20 @@ function drawBeetle(scene) {
 	});
 }
 
-function drawPlane(scene){
+drawBeetle(scene);
+
+function drawPlane(scene) {
 	const objectLoader = new THREE.ObjectLoader();
 	objectLoader.load('dist/fighter-plane.json', (obj) => {
 		var plane = obj;
 		plane.scale.set(1, 1, 1);
 		plane.rotation.set(0, helper.degreeToRadian(90), 0);
 		scene.add(plane);
-		plane.position.set(10, 10, 10)
+		plane.position.set(10, 10, 10);
 	});
 }
+
 drawPlane(scene);
-drawBeetle(scene);
 
 let dumpTruck = null;
 let dumpTruckPos = 0;
