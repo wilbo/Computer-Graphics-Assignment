@@ -10,7 +10,7 @@ import skybox3 from './assets/skybox/devils_advocate_up.jpg';
 import skybox4 from './assets/skybox/devils_advocate_dn.jpg';
 import skybox5 from './assets/skybox/devils_advocate_ft.jpg';
 import skybox6 from './assets/skybox/devils_advocate_bk.jpg';
-var helper = require('./helper.js');
+import helpers from './helpers';
 
 // Setup
 //
@@ -58,15 +58,13 @@ function drawGround(scene) {
 drawGround(scene);
 
 function drawAppartments(scene) {
-	function box(x, y, z) {
-		const geometry = new THREE.BoxGeometry(x, y, z);
-		// set its 0 point in a corner
-		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(x / 2, y / 2, -(z / 2)));
-
+	function box(width, height, depth) {
+		const geometry = new THREE.BoxGeometry(width, height, depth);
+		geometry.applyMatrix(helpers.zeroPointToCorner(width, height, -depth));
 		const texture = new THREE.TextureLoader().load(brick);
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set(x * 2, y * 2);
+		texture.repeat.set(width * 2, height * 2);
 
 		const material = new THREE.MeshLambertMaterial({ map: texture });
 		const mesh = new THREE.Mesh(geometry, material);
@@ -102,37 +100,27 @@ function drawAppartments(scene) {
 drawAppartments(scene);
 
 function drawNewBuilding(width, height, depth, x, z, y) {
-	// create a cube as per usual
 	const geometry = new THREE.CubeGeometry(width, height, depth);
-	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
+	geometry.applyMatrix(helpers.zeroPointToCorner(width, height, depth));
 	const texture = new THREE.TextureLoader().load(glass);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
+	const cubeMesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial(material));
 
-	var cubeMesh = new THREE.Mesh(
-		geometry,
-		new THREE.MeshLambertMaterial(material)
-	);
-	scene.add(cubeMesh);
 	cubeMesh.castShadow = true;
-
-	// change vertex positions
 	cubeMesh.geometry.vertices[1].y += 1;
 	cubeMesh.geometry.vertices[4].y += 1;
 	cubeMesh.position.set(x, z, y);
-	// cubeMesh.rotateY(90 * (3.14/180));
-	cubeMesh.rotateY(helper.degreeToRadian(90));
-	// indicate that the vertices need update
+	cubeMesh.rotateY(helpers.degreeToRadian(90));
 	cubeMesh.geometry.verticesNeedUpdate = true;
-	// return cubeMesh;
-	// }
-	// scene.add(building(1,2,3));
+
+	scene.add(cubeMesh);
 }
 
 drawNewBuilding(3, 8, 2, 10, 0, 10);
 
 function drawWindow1(scene, x, y, z) {
 	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
-	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.3, 0.2, 1));
+	geometry.applyMatrix(helpers.zeroPointToCorner(0.6, 0.4, 2));
 	const texture = new THREE.TextureLoader().load(window1);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
 	const plane = new THREE.Mesh(geometry, material);
@@ -143,22 +131,22 @@ function drawWindow1(scene, x, y, z) {
 function drawTree(scene, width, height, depth, x, y, z) {
 	const radiusTop = width / 16;
 	const radiusBottom = width / 14;
-	var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, 32 );
-	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
-	var material = new THREE.MeshLambertMaterial({ color: 0x916f3e });
-	var treePole = new THREE.Mesh( geometry, material );
+	const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, 32);
+	geometry.applyMatrix(helpers.zeroPointToCorner(width, height, depth));
+	const material = new THREE.MeshLambertMaterial({ color: 0x916f3e });
+	const treePole = new THREE.Mesh(geometry, material);
 	treePole.position.set(x, y, z);
 
-	var geometry2 = new THREE.SphereGeometry( 0.5, 32, 32 );
-	geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
-	var material2 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
-	var leafs = new THREE.Mesh( geometry2, material2 );
+	const geometry2 = new THREE.SphereGeometry(0.5, 32, 32);
+	geometry2.applyMatrix(helpers.zeroPointToCorner(width, height, depth));
+	const material2 = new THREE.MeshLambertMaterial({color: 0x638c48});
+	const leafs = new THREE.Mesh(geometry2, material2);
 	leafs.position.set(x, Math.random() * 0.5 + 0.5 + y, z);
 
-	var geometry3 = new THREE.SphereGeometry( 0.4, 32, 32 );
-	geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
-	var material3 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
-	var leafs2 = new THREE.Mesh( geometry3, material3 );
+	const geometry3 = new THREE.SphereGeometry(0.4, 32, 32);
+	geometry3.applyMatrix(helpers.zeroPointToCorner(width, height, depth));
+	const material3 = new THREE.MeshLambertMaterial({color: 0x638c48});
+	const leafs2 = new THREE.Mesh(geometry3, material3);
 	leafs2.position.set(x, Math.random() * 0.5 + 0.75 + y, z);
 
 	treePole.castShadow = true;
@@ -179,18 +167,18 @@ function drawTrees(scene) {
 drawTrees(scene);
 
 function drawRoad(scene) {
-	const geometry = new THREE.PlaneGeometry( 100, 4, 32 );
+	const geometry = new THREE.PlaneGeometry(1000, 4, 32);
 	geometry.lookAt(new THREE.Vector3(0, 10, 0));
 	const texture = new THREE.TextureLoader().load(road);
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
-	texture.repeat.set(1, 12);
-	texture.rotation = helper.degreeToRadian(90);
+	texture.repeat.set(1, 120);
+	texture.rotation = helpers.degreeToRadian(90);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
-	const plane = new THREE.Mesh( geometry, material );
+	const plane = new THREE.Mesh(geometry, material);
 	plane.position.set(0, 0.01, 4);
 	plane.receiveShadow = true;
-	scene.add( plane );
+	scene.add(plane);
 }
 
 drawRoad(scene);
@@ -210,7 +198,7 @@ function drawBeetle(scene) {
 	objectLoader.load('dist/beetle/beetle.json', (obj) => {
 		beetle = obj;
 		beetle.scale.set(0.001, 0.001, 0.001);
-		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
+		beetle.rotation.set(0, helpers.degreeToRadian(90), 0);
 		scene.add(beetle);
 	});
 }
@@ -219,12 +207,12 @@ drawBeetle(scene);
 
 function drawPlane(scene) {
 	const objectLoader = new THREE.ObjectLoader();
-	objectLoader.load('dist/fighter-plane.json', (obj) => {
-		var plane = obj;
+	objectLoader.load('dist/plane/fighter-plane.json', (obj) => {
+		const plane = obj;
 		plane.scale.set(1, 1, 1);
-		plane.rotation.set(0, helper.degreeToRadian(90), 0);
-		scene.add(plane);
+		plane.rotation.set(0, helpers.degreeToRadian(90), 0);
 		plane.position.set(10, 10, 10);
+		scene.add(plane);
 	});
 }
 
@@ -245,7 +233,7 @@ function drawDumpTruck(scene) {
 	objectLoader.load('dist/dump-truck/mining-dump-truck.json', (obj) => {
 		dumpTruck = obj;
 		dumpTruck.scale.set(0.008, 0.008, 0.008);
-		dumpTruck.rotation.set(0, helper.degreeToRadian(270), 0);
+		dumpTruck.rotation.set(0, helpers.degreeToRadian(270), 0);
 		scene.add(dumpTruck);
 	});
 }
@@ -253,18 +241,18 @@ function drawDumpTruck(scene) {
 drawDumpTruck(scene);
 
 function drawSkyBox(scene) {
-	var directions = [skybox1, skybox2, skybox3, skybox4, skybox5, skybox6];
-	var materialArray = [];
-	for (var i = 0; i < 6; i++) {
+	const directions = [skybox1, skybox2, skybox3, skybox4, skybox5, skybox6];
+	const materialArray = [];
+	for (let i = 0; i < 6; i++) {
 		materialArray.push(new THREE.MeshBasicMaterial({
 			map: THREE.ImageUtils.loadTexture(directions[i]),
 			side: THREE.BackSide
 		}));
 	}
 
-	var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
-	var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-	var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+	const skyGeometry = new THREE.CubeGeometry(1000, 1000, 1000);
+	const skyMaterial = new THREE.MeshFaceMaterial(materialArray);
+	const skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
 	skyBox.position.set(0, 100, 0);
 	scene.add(skyBox);
 }
