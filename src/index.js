@@ -4,6 +4,12 @@ import brick from './assets/brick.jpg';
 import window1 from './assets/window.jpg';
 import road from './assets/road.jpg';
 import glass from './assets/glass.jpg';
+import skybox1 from './assets/skybox/devils_advocate_lf.jpg';
+import skybox2 from './assets/skybox/devils_advocate_rt.jpg';
+import skybox3 from './assets/skybox/devils_advocate_up.jpg';
+import skybox4 from './assets/skybox/devils_advocate_dn.jpg';
+import skybox5 from './assets/skybox/devils_advocate_ft.jpg';
+import skybox6 from './assets/skybox/devils_advocate_bk.jpg';
 var helper = require('./helper.js');
 
 // Setup
@@ -41,7 +47,7 @@ function drawHemisphereLight(scene) {
 drawHemisphereLight(scene);
 
 function drawGround(scene) {
-	const geometry = new THREE.PlaneGeometry(100, 100);
+	const geometry = new THREE.PlaneGeometry(1000, 1000);
 	geometry.lookAt(new THREE.Vector3(0, 10, 0));
 	const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
 	const plane = new THREE.Mesh(geometry, material);
@@ -95,6 +101,12 @@ function drawAppartments(scene) {
 
 drawAppartments(scene);
 
+function drawNewBuilding(width, height, depth, x, z, y) {
+	// create a cube as per usual
+	const geometry = new THREE.CubeGeometry(width, height, depth);
+	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
+	const texture = new THREE.TextureLoader().load(brick);
+	const material = new THREE.MeshLambertMaterial({ map: texture });
 
 
 function drawNewBuilding(width,height,depth,x,z,y){
@@ -153,11 +165,19 @@ function drawTree(scene, width, height, depth, x, y, z) {
 	var leafs = new THREE.Mesh( geometry2, material2 );
 	leafs.position.set(x, Math.random() * 0.5 + 0.5 + y, z);
 
+	var geometry3 = new THREE.SphereGeometry( 0.4, 32, 32 );
+	geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material3 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
+	var leafs2 = new THREE.Mesh( geometry3, material3 );
+	leafs2.position.set(x, Math.random() * 0.5 + 0.75 + y, z);
+
 	treePole.castShadow = true;
 	leafs.castShadow = true;
+	leafs2.castShadow = true;
 
 	scene.add(treePole);
 	scene.add(leafs);
+	scene.add(leafs2);
 }
 
 function drawTrees(scene) {
@@ -185,9 +205,19 @@ function drawRoad(scene) {
 
 drawRoad(scene);
 
+let beetle = null;
+let beetlePos = 100;
+function driveBeetle(speed) {
+	if (beetle !== null) {
+		beetle.position.set(beetlePos - 50, 0.3, 3);
+		beetlePos = beetlePos === 0 ? 100 : beetlePos - speed;
+	}
+}
+
 function drawBeetle(scene) {
 	const objectLoader = new THREE.ObjectLoader();
-	objectLoader.load('dist/beetle.json', (obj) => {
+	// Dont forget to copy the json file over to the dist folder
+	objectLoader.load('dist/beetle/beetle.json', (obj) => {
 		beetle = obj;
 		beetle.scale.set(0.001, 0.001, 0.001);
 		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
@@ -208,16 +238,46 @@ function drawPlane(scene){
 drawPlane(scene);
 drawBeetle(scene);
 
-let beetle = null;
-let beetlePos = 100;
-function driveBeetle(speed) {
-	if (beetle !== null) {
-		beetle.position.set(beetlePos - 50, 0.3, 3);
-		beetlePos = beetlePos === 0 ? 100 : beetlePos - speed;
+let dumpTruck = null;
+let dumpTruckPos = 0;
+function driveDumpTruck(speed) {
+	if (dumpTruck !== null) {
+		dumpTruck.position.set(dumpTruckPos - 50, 0, 5);
+		dumpTruckPos = dumpTruckPos >= 100 ? 0 : dumpTruckPos + speed;
 	}
 }
 
+function drawDumpTruck(scene) {
+	const objectLoader = new THREE.ObjectLoader();
+	// Dont forget to copy the json file over to the dist folder
+	objectLoader.load('dist/dump-truck/mining-dump-truck.json', (obj) => {
+		dumpTruck = obj;
+		dumpTruck.scale.set(0.008, 0.008, 0.008);
+		dumpTruck.rotation.set(0, helper.degreeToRadian(270), 0);
+		scene.add(dumpTruck);
+	});
+}
 
+drawDumpTruck(scene);
+
+function drawSkyBox(scene) {
+	var directions = [skybox1, skybox2, skybox3, skybox4, skybox5, skybox6];
+	var materialArray = [];
+	for (var i = 0; i < 6; i++) {
+		materialArray.push(new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture(directions[i]),
+			side: THREE.BackSide
+		}));
+	}
+
+	var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+	var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+	var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+	skyBox.position.set(0, 100, 0);
+	scene.add(skyBox);
+}
+
+drawSkyBox(scene);
 
 // Render
 
@@ -225,6 +285,7 @@ function animate(c, r, s, ca) {
 	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
 
 	driveBeetle(0.25);
+	driveDumpTruck(0.15);
 
 	c.update();
 	r.render(s, ca);
