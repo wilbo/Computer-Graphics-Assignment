@@ -153,11 +153,19 @@ function drawTree(scene, width, height, depth, x, y, z) {
 	var leafs = new THREE.Mesh( geometry2, material2 );
 	leafs.position.set(x, Math.random() * 0.5 + 0.5 + y, z);
 
+	var geometry3 = new THREE.SphereGeometry( 0.4, 32, 32 );
+	geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, depth / 2));
+	var material3 = new THREE.MeshLambertMaterial( {color: 0x638c48} );
+	var leafs2 = new THREE.Mesh( geometry3, material3 );
+	leafs2.position.set(x, Math.random() * 0.5 + 0.75 + y, z);
+
 	treePole.castShadow = true;
 	leafs.castShadow = true;
+	leafs2.castShadow = true;
 
 	scene.add(treePole);
 	scene.add(leafs);
+	scene.add(leafs2);
 }
 
 function drawTrees(scene) {
