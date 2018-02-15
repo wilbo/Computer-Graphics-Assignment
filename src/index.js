@@ -110,9 +110,13 @@ function drawNewBuilding(width,height,depth,x,z,y){
 		//create a cube as per usual
 		const geometry = new THREE.CubeGeometry(width, height, depth);
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(width / 2, height / 2, -(depth / 2)));
+		const texture = new THREE.TextureLoader().load(brick);
+		const material = new THREE.MeshLambertMaterial({ map: texture });
+
+
 		var cubeMesh = new THREE.Mesh(
 				geometry,
-				new THREE.MeshLambertMaterial()
+				new THREE.MeshLambertMaterial(material)
 		);
 		scene.add(cubeMesh);
 
