@@ -176,18 +176,6 @@ function drawRoad(scene) {
 
 drawRoad(scene);
 
-function drawBeetle(scene) {
-	const objectLoader = new THREE.ObjectLoader();
-	objectLoader.load('dist/beetle.json', (obj) => {
-		beetle = obj;
-		beetle.scale.set(0.001, 0.001, 0.001);
-		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
-		scene.add(beetle);
-	});
-}
-
-drawBeetle(scene);
-
 let beetle = null;
 let beetlePos = 100;
 function driveBeetle(speed) {
@@ -197,12 +185,49 @@ function driveBeetle(speed) {
 	}
 }
 
+function drawBeetle(scene) {
+	const objectLoader = new THREE.ObjectLoader();
+	// Dont forget to copy the json file over to the dist folder
+	objectLoader.load('dist/beetle/beetle.json', (obj) => {
+		beetle = obj;
+		beetle.scale.set(0.001, 0.001, 0.001);
+		beetle.rotation.set(0, helper.degreeToRadian(90), 0);
+		scene.add(beetle);
+	});
+}
+
+drawBeetle(scene);
+
+let dumpTruck = null;
+let dumpTruckPos = 0;
+function driveDumpTruck(speed) {
+	if (dumpTruck !== null) {
+		dumpTruck.position.set(dumpTruckPos - 50, 0, 5);
+		dumpTruckPos = dumpTruckPos >= 100 ? 0 : dumpTruckPos + speed;
+		// console.log(dumpTruckPos);
+	}
+}
+
+function drawDumpTruck(scene) {
+	const objectLoader = new THREE.ObjectLoader();
+	// Dont forget to copy the json file over to the dist folder
+	objectLoader.load('dist/dump-truck/mining-dump-truck.json', (obj) => {
+		dumpTruck = obj;
+		dumpTruck.scale.set(0.008, 0.008, 0.008);
+		dumpTruck.rotation.set(0, helper.degreeToRadian(270), 0);
+		scene.add(dumpTruck);
+	});
+}
+
+drawDumpTruck(scene);
+
 // Render
 
 function animate(c, r, s, ca) {
 	window.requestAnimationFrame(animate.bind(this, c, r, s, ca));
 
 	driveBeetle(0.25);
+	driveDumpTruck(0.15);
 
 	c.update();
 	r.render(s, ca);
