@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import brick from './assets/brick.jpg';
+import window1 from './assets/window.jpg';
 
 // Setup
 //
@@ -62,9 +63,13 @@ function drawAppartments(scene) {
 		const geometry = new THREE.BoxGeometry(x, y, z);
 		// set its 0 point in a corner
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(x / 2, y / 2, -(z / 2)));
-		const material = new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load(brick)
-		});
+
+		const texture = new THREE.TextureLoader().load(brick);
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(x * 2, y * 2);
+
+		const material = new THREE.MeshLambertMaterial({ map: texture });
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
 		return mesh;
@@ -85,6 +90,25 @@ function drawAppartments(scene) {
 	scene.add(middle);
 	scene.add(right);
 	scene.add(hang);
+
+	drawWindow1(scene, -2, 1, -0.99);
+	drawWindow1(scene, -1, 1, -0.99);
+	drawWindow1(scene, -2, 0, -0.99);
+	drawWindow1(scene, -1, 0, -0.99);
+	drawWindow1(scene, 1, 0, -0.99);
+	drawWindow1(scene, 2, 0, -0.99);
+	drawWindow1(scene, 1.75, 1, -0.49);
 }
 
 drawAppartments(scene);
+
+function drawWindow1(scene, x, y, z) {
+	const geometry = new THREE.PlaneGeometry(0.6, 0.4);
+	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.3, 0.2, 1));
+	// geometry.lookAt(new THREE.Vector3(0, 10, 0));
+	const texture = new THREE.TextureLoader().load(window1);
+	const material = new THREE.MeshLambertMaterial({ map: texture });
+	const plane = new THREE.Mesh(geometry, material);
+	plane.position.set(x + 0.2, y + 0.3, z);
+	scene.add(plane);
+}

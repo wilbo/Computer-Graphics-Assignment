@@ -5,7 +5,8 @@ module.exports = {
 			"semi": [2, "always"],
 			"space-before-function-paren": ["error", "never"],
 			"no-tabs": 0,
-			"no-unused-vars": ["warn"]
+			"no-unused-vars": ["warn"],
+			"space-in-parens": 0
 		},
 		"globals": {
 			"window": true
