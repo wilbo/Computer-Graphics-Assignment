@@ -14,6 +14,8 @@ $ npm install -g parcel-bundler
 $ npm install # install dependencies
 $ npm start # dev build and browse to http://localhost:1234
 ```
+#### IMPORTANT:
+The 3d-models aren't being included inside the bundle. To see these models you must manually copy the contents of assets/models over to the 'dist' folder.
 
 ### Task
 Create a scene, similar to a short movie scene, of your neighborhood (close to where you live)
