@@ -195,7 +195,7 @@ function driveBeetle(speed) {
 function drawBeetle(scene) {
 	const objectLoader = new THREE.ObjectLoader();
 	// Dont forget to copy the json file over to the dist folder
-	objectLoader.load('dist/beetle/beetle.json', (obj) => {
+	objectLoader.load(helpers.filePath('beetle/beetle.json'), (obj) => {
 		beetle = obj;
 		beetle.scale.set(0.001, 0.001, 0.001);
 		beetle.rotation.set(0, helpers.degreeToRadian(90), 0);
@@ -207,7 +207,7 @@ drawBeetle(scene);
 
 function drawPlane(scene) {
 	const objectLoader = new THREE.ObjectLoader();
-	objectLoader.load('dist/plane/fighter-plane.json', (obj) => {
+	objectLoader.load(helpers.filePath('plane/fighter-plane.json'), (obj) => {
 		const plane = obj;
 		plane.scale.set(1, 1, 1);
 		plane.rotation.set(0, helpers.degreeToRadian(90), 0);
@@ -230,7 +230,7 @@ function driveDumpTruck(speed) {
 function drawDumpTruck(scene) {
 	const objectLoader = new THREE.ObjectLoader();
 	// Dont forget to copy the json file over to the dist folder
-	objectLoader.load('dist/dump-truck/mining-dump-truck.json', (obj) => {
+	objectLoader.load(helpers.filePath('dump-truck/mining-dump-truck.json'), (obj) => {
 		dumpTruck = obj;
 		dumpTruck.scale.set(0.008, 0.008, 0.008);
 		dumpTruck.rotation.set(0, helpers.degreeToRadian(270), 0);
