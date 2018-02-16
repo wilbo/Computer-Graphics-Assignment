@@ -1,5 +1,7 @@
 # Computer Graphics Assignment
 
+[Click here for the result!](https://wilbo.github.io/Computer-Graphics-Assignment/)
+
 ### Install instructions
 
 A recent version of [NodeJS](https://nodejs.org/en/) is required.
